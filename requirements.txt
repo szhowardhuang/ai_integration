@@ -2,3 +2,5 @@ gradio
 groq
 requests
 flask
+nltk
+scikit-learn

@@ -20,17 +20,19 @@ master_AI_Integration_In_Ur_Application
 2. **Run Server**
 
   ```bash
+
+    #start mapping server
+    python mapping_server.py
+
     python server.py
     
     #test
     curl -s http://127.0.0.1:5000/supply-chain-data?query=order_tracking
     
-    #start mapping server
-    python mapping_api.py
-    
+    python dashboard.py
     
   ```
-4. 
+
 
 
    

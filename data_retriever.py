@@ -2,9 +2,32 @@ import json
 import os
 import logging
 import requests
+import re
+import nltk
+from nltk.corpus import stopwords
+from nltk.tokenize import word_tokenize
+from nltk.stem import WordNetLemmatizer
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.metrics.pairwise import cosine_similarity
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
+
+nltk.download('punkt')
+nltk.download('stopwords')
+nltk.download('wordnet')
+
+# 初始化词形还原器
+lemmatizer = WordNetLemmatizer()
+
+# 预处理函数
+def preprocess_text(text):
+    tokens  = re.split(r'[\s_]+', text)
+    # 转为小写
+    tokens = [token.lower() for token in tokens]
+    # 去除停用词和词形还原
+    tokens = [lemmatizer.lemmatize(word) for word in tokens if word.isalpha() and word not in stopwords.words('english')]
+    return tokens
 
 class SupplyChainDataRetriever:
     """
@@ -53,11 +76,24 @@ class SupplyChainDataRetriever:
 
         # Check if the query matches any of the known supply chain activities
         for activity, filename in self.query_mapping.items():
-            activity_words = set(activity.split(' '))
-            print("Active {activity_words}")
-            query_words = set(query.split())
-            print(f"Active {activity} query {query}")
-            if activity_words & query_words:
+            # 文本预处理
+            activity_words = preprocess_text(activity)
+            query_words = preprocess_text(query)
+
+            # 打印预处理后的单词
+            print(f"activity_words = {activity_words}")
+            print(f"query_words = {query_words}")
+
+            # 特征提取：使用TF-IDF
+            vectorizer = TfidfVectorizer()
+            tfidf_matrix = vectorizer.fit_transform([' '.join(activity_words), ' '.join(query_words)])
+
+            # 计算余弦相似度
+            similarity_score = cosine_similarity(tfidf_matrix[0:1], tfidf_matrix[1:2])
+
+            print(f"Text Similarity Score: {similarity_score[0][0]}")
+
+            if similarity_score[0][0] >= 0.3:
                 file_path = os.path.join(self.database_folder, filename)
                 if os.path.exists(file_path):
                     logger.info(f"Reading data from file: {file_path}")
