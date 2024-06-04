@@ -5,30 +5,11 @@ master_AI_Integration_In_Ur_Application
 **Prerequisites:**
 
 * Python installed on your system.
-* A basic understanding of virtual environments and command-line tools.
+* A Groq license.
 
 **Steps:**
 
-1. **Virtual Environment Setup:**
-
-   - Create a dedicated virtual environment for our project:
-   
-     ```bash
-     python -m venv master_AI_Integration_In_Ur_Application 
-     ```
-
-   - Activate the environment:
-   
-     * Windows:
-        ```bash
-        master_AI_Integration_In_Ur_Application\Scripts\activate
-        ```
-     * Unix/macOS:
-        ```bash
-        source master_AI_Integration_In_Ur_Application/bin/activate
-        ```
-
-2. **Install Project Dependencies:**
+1. **Install Project Dependencies:**
 
    - Grab the necessary packages with the help of `pip`:
    
@@ -36,7 +17,7 @@ master_AI_Integration_In_Ur_Application
      pip install -r requirements.txt
      ```
      
-3. **Run Server**
+2. **Run Server**
 
   ```bash
     python server.py
